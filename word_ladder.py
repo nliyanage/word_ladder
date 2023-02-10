@@ -52,3 +52,15 @@ def _adjacent(word1, word2):
     >>> _adjacent('stone','money')
     False
     '''
+    i = 0
+    numberdifferentletters = 0
+    for i in range(5): 
+        if word1[i] == word2[i]:
+            numberdifferentletters = numberdifferentletters
+        else: 
+            numberdifferentletters += 1
+    if numberdifferentletters != 1:
+        return False
+    else:
+        return True
+
