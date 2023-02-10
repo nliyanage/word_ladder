@@ -1,5 +1,7 @@
 #!/bin/python3
 
+from collections import deque
+
 
 def word_ladder(start_word, end_word, dictionary_file='words5.dict'):
     '''
@@ -28,6 +30,27 @@ def word_ladder(start_word, end_word, dictionary_file='words5.dict'):
     Whenever it is impossible to generate a word ladder between the two words,
     the function returns `None`.
     '''
+    dictionary_file = open('words5.dict', 'r')
+    dictionary5 = dictionary_file.readlines()
+    #replace variavle name in whiel loop w dicitornary5
+    #make srue the readlinescommand works 
+    stack = []
+    stack.append(start_word)
+    deque1 = deque([])
+    deque1.append(stack)
+    i=0
+    while len(deque1) != 0:
+        deque.popleft(stack)
+        for i in range(len(dictionary_file)):
+            if _adjacent(dictionary_file[i], stack[-1]) is True:
+                    if dictionary_file[i] == end_word:
+                        wordladder = deque1.popleft
+                        wordladder.append(end_word)
+                        return wordladder
+                    stackcopy = stack.copy()
+                    stackcopy.append(dictionary_file[i])
+                    deque1.append(stackcopy)
+                    #delete word from dictionary
 
 
 def verify_word_ladder(ladder):
