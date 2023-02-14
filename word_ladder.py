@@ -1,5 +1,5 @@
 #!/bin/python3
-
+import copy
 from collections import deque
 
 
@@ -18,42 +18,47 @@ def word_ladder(start_word, end_word, dictionary_file='words5.dict'):
     ```
     may give the output
     ```
-    ['stone', 'shone', 'phone', 'phony', 'peony', 'penny', 'benny', 'bonny', 'boney', 'money']
+    ['stone', 'shone', 'phone', 'phony', 'peony',
+    'penny', 'benny', 'bonny', 'boney', 'money']
     ```
     but the possible outputs are not unique,
     so you may also get the output
     ```
-    ['stone', 'shone', 'shote', 'shots', 'soots', 'hoots', 'hooty', 'hooey', 'honey', 'money']
+    ['stone', 'shone', 'shote', 'shots', 'soots',
+    'hoots', 'hooty', 'hooey', 'honey', 'money']
     ```
     (We cannot use doctests here because the outputs are not unique.)
 
     Whenever it is impossible to generate a word ladder between the two words,
     the function returns `None`.
     '''
-    dictionary_file = open('words5.dict', 'r')
-    dictionary5 = dictionary_file.readlines()
-    #replace variavle name in whiel loop w dicitornary5
-    #make srue the readlinescommand works 
+
     stack = []
     stack.append(start_word)
-    deque1 = deque([])
+    deque1 = deque()
     deque1.append(stack)
-    i=0
+    if start_word == end_word:
+        return stack
+    with open(dictionary_file, 'r') as f:
+        dictionary_file = [word.strip() for word in f]
     while len(deque1) != 0:
-        deque.popleft(stack)
-        for i in range(len(dictionary_file)):
-            if _adjacent(dictionary_file[i], stack[-1]) is True:
-                    if dictionary_file[i] == end_word:
-                        wordladder = deque1.popleft
-                        wordladder.append(end_word)
-                        return wordladder
-                    stackcopy = stack.copy()
-                    stackcopy.append(dictionary_file[i])
-                    deque1.append(stackcopy)
-                    #delete word from dictionary
+        currentstack = deque1.popleft()
+        copy_dictionary = copy.copy(dictionary_file)
+        for i in copy_dictionary:
+            if _adjacent(i, currentstack[-1]) is True:
+                    if i == end_word:
+                        currentstack.append(i)
+                        return currentstack
+                    else:
+                        stackcopy = copy.copy(currentstack)
+                        stackcopy.append(i)
+                        deque1.append(stackcopy)
+                        dictionary_file.remove(i)
+    return None
 
 
 def verify_word_ladder(ladder):
+
     '''
     Returns True if each entry of the input list is adjacent to its neighbors;
     otherwise returns False.
@@ -63,24 +68,20 @@ def verify_word_ladder(ladder):
     >>> verify_word_ladder(['stone', 'shone', 'phony'])
     False
     '''
-    if len(ladder) == 1:
-        return True
+    emptylist = []
     if len(ladder) == 0:
         return False
-    i = 0
-    adjacentcounter = 0
-    for i in (range(len(ladder)-1)):
-        isadjacent = _adjacent(ladder[i], ladder[i+1])
-        if isadjacent == True:
-            adjacentcounter = adjacentcounter
-        else:
-            adjacentcounter += 1
-    if adjacentcounter != 0:
-        return False
     else:
-        return True
+        for i in range(len(ladder)-1):
+            emptylist += [_adjacent(ladder[i], ladder[i+1])]
+        if False in emptylist:
+            return False
+        else:
+            return True
+
 
 def _adjacent(word1, word2):
+
     '''
     Returns True if the input words differ by only a single character;
     returns False otherwise.
@@ -90,15 +91,14 @@ def _adjacent(word1, word2):
     >>> _adjacent('stone','money')
     False
     '''
-    i = 0
-    numberdifferentletters = 0
-    for i in range(5): 
-        if word1[i] == word2[i]:
-            numberdifferentletters = numberdifferentletters
-        else: 
-            numberdifferentletters += 1
-    if numberdifferentletters != 1:
-        return False
+    if len(word1) == len(word2):
+        numberdifferentletters = 0
+        for i in range(len(word1)):
+            if word1[i] != word2[i]:
+                numberdifferentletters += 1
+        if numberdifferentletters > 1:
+            return False
+        else:
+            return True
     else:
-        return True
-
+        return False
